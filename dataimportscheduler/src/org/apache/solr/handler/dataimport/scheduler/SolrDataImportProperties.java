@@ -16,6 +16,8 @@ public class SolrDataImportProperties {
 	public static final String SYNC_CORES = "syncCores";
 	public static final String SERVER = "server";
 	public static final String PORT = "port";
+	public static final String LOGIN = "login";
+	public static final String PASSWORD = "password";
 	public static final String WEBAPP = "webapp";
 	public static final String PARAMS = "params";
 	public static final String INTERVAL = "interval";

@@ -7,6 +7,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,6 +20,10 @@ public abstract class BaseTimerTask extends TimerTask {
 	protected String[] syncCores;
 	protected String server;
 	protected String port;
+	protected String login;
+	protected String password;
+	protected String basicAuth;
+
 	protected String webapp;
 	protected String params;
 	protected String interval;
@@ -59,6 +64,12 @@ public abstract class BaseTimerTask extends TimerTask {
 		cores = p.getProperty(SolrDataImportProperties.SYNC_CORES);
 		server = p.getProperty(SolrDataImportProperties.SERVER);
 		port = p.getProperty(SolrDataImportProperties.PORT);
+		login = p.getProperty(SolrDataImportProperties.LOGIN);
+		password = p.getProperty(SolrDataImportProperties.PASSWORD);
+		String auth = login + ":" + password;
+
+		basicAuth = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes());
+
 		webapp = p.getProperty(SolrDataImportProperties.WEBAPP);
 		params = p.getProperty(SolrDataImportProperties.PARAMS);
 		interval = p.getProperty(SolrDataImportProperties.INTERVAL);
@@ -119,6 +130,11 @@ public abstract class BaseTimerTask extends TimerTask {
 
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("type", "submit");
+
+			if (!basicAuth.isEmpty()) {
+				conn.setRequestProperty ("Authorization", basicAuth);
+			}
+
 			conn.setDoOutput(true);
 
 			// Send HTTP POST
